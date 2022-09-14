@@ -1,0 +1,11 @@
+
+import Regalo.*
+
+describe "Una pista de Scalextric" {
+
+	test "testX" {
+
+		assert.that(true)
+
+	}
+}
