@@ -12,6 +12,12 @@ object stefan {
 	method valorAceptableDe(regalo) {
 		return regalo.precio() < self.valorMaximoRegalo()
 	}
+	
+	method inconformista(regalos) {
+		return regalos.all({regalo => self.esRegaloPreferido(regalo).negate()})
+	}
+	
+	
 }
 
 object justina {
@@ -20,14 +26,19 @@ object justina {
 	method edad() { return edad }
 	
 	method edad(_edad) { edad = _edad }
+	
+	method valorAceptableDe(regalo) {
+		return regalo.precio().toString().length() == 4
+	}
 
 	method esRegaloPreferido(regalo) {
 		return (regalo.esValioso() and self.edad().odd()) || self.valorAceptableDe(regalo)
 	}	
 	
-	method valorAceptableDe(regalo) {
-		return regalo.precio().toString().length() == 4
+	method inconformista(regalos) {
+		return regalos.all({regalo => self.esRegaloPreferido(regalo).negate()})
 	}
+	
 }
 
 object pedro {
@@ -52,6 +63,10 @@ object pedro {
 	
 	method esRegaloPreferido(regalo) {
 		return self.mejorAmigo().esRegaloPreferido(regalo)
+	}
+	
+	method inconformista(regalos) {
+		return regalos.all({regalo => self.esRegaloPreferido(regalo).negate()})
 	}
 	
 }
