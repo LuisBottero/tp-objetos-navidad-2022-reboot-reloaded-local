@@ -1,6 +1,8 @@
 // Una pista de Scalextric, que sale 27.300 pesos por ahora (se ajusta con la inflación).
 // Viene con 2 autos. Se le puede agregar autos extra y cada uno tiene un costo adicional de 5.250 pesos.
 // Este regalo es valioso si el costo total excede los 27.500 pesos (considerando los autos extra).
+
+//Prueba SSH
 object scalextric {
 	const precioBase = 27300
 	const precioLimiteValioso = 27500
