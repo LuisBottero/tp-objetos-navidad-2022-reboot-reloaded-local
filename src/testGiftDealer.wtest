@@ -1,0 +1,49 @@
+import regalos.*
+import personas.*
+import giftDealers.*
+
+describe "Tests de GiftDealers" {
+
+	test "Con las condiciones iniciales, el único inconformista es stefan" {
+		assert.equals(giftDealer.quienesSonInconformistas().asSet(), #{stefan})
+	}
+	
+	test "Si pedro tiene de mejor amigo a stefan, los inconformistas son stefan y pedro" {
+		pedro.cambiarMejorAmigue(stefan)
+		assert.equals(giftDealer.quienesSonInconformistas().asSet(), #{pedro, stefan})
+	}
+
+	test "Si el yo_yo es de color violeta, pedro y justina son inconformistas" {
+		yo_yo.elegirColor("violeta")
+		assert.equals(giftDealer.quienesSonInconformistas().asSet(), #{justina, pedro})
+	}
+	
+	test "Se debe registrar en el histórico cada vez que se hace un regalo" {
+		const cantidadHistorico = giftDealer.verHistorico().size()
+		giftDealer.asignarRegalo(justina)
+		assert.equals(giftDealer.verHistorico().size(), cantidadHistorico + 1)
+	}
+	
+	test "Pedro recibe $18.000 en regalos, Stefan $17.000, entonces Pedro es quien más recibió" {
+		const regalo1 = object { method cuantoCuesta() = 5000 }
+		const regalo2 = object { method cuantoCuesta() = 15000 }
+		const regalo3 = object { method cuantoCuesta() = 13000 }
+		const regalo4 = object { method cuantoCuesta() = 2000 }
+		giftDealer.asignarRegalo(pedro, regalo1, new Date())
+		giftDealer.asignarRegalo(stefan, regalo2, new Date())
+		giftDealer.asignarRegalo(pedro, regalo3, new Date())
+		giftDealer.asignarRegalo(stefan, regalo4, new Date())
+		assert.equals(giftDealer.quienRecibioMasPlataEnRegalos(), pedro)
+	}
+	
+	test "Si se agrega un jean de $2.000 a la lista de regalos, Justina lo elige por sobre el yo_yo" {
+		const jean = new Ropa(marca = "Zara", fechaConfeccion = new Date(), valorBase = 2000)
+		giftDealer.agregarRegalo(jean)
+		assert.equals(giftDealer.asignarRegalo(justina), jean)
+	}
+	
+	test "Si alguien no elige ningún regalo, se le asigna un voucher" {
+		const persona = object { method eligeRegalo(regalo) = false }
+		assert.equals(giftDealer.obtenerRegaloAsignado(persona), voucher)
+	}
+}

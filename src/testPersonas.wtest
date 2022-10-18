@@ -1,0 +1,103 @@
+import regalos.*
+import personas.*
+
+describe "Tests de Personas" {
+
+	test "Stefan eligiendo regalos de menos de $ 6.000 no elige a un yo-yo pintado de amarillo porque es valioso." {
+		yo_yo.elegirColor("amarillo")
+		assert.notThat(stefan.eligeRegalo(yo_yo))
+	}
+
+	test "Stefan eligiendo regalos de menos de $ 6.000 no elige a un yo-yo pintado de rojo porque es muy caro." {
+		yo_yo.elegirColor("rojo")
+		assert.notThat(stefan.eligeRegalo(yo_yo))
+	}
+
+	test "Stefan eligiendo regalos de menos de $ 6.000 elige a un yo-yo pintado de verde porque no es valioso y es barato." {
+		yo_yo.elegirColor("verde")
+		assert.that(stefan.eligeRegalo(yo_yo))
+	}
+
+	test "Justina con edad impar elige al scalextric con un auto extra porque es valioso." {
+		scalextric.agregarAuto()
+		assert.that(justina.eligeRegalo(scalextric))
+	}
+
+	test "Justina con edad impar no elige a un scalextric estándar porque no es valioso." {
+		assert.notThat(justina.eligeRegalo(scalextric))
+	}
+
+	test "Justina con edad par no elige a un scalextric estándar porque no tiene 4 dígitos." {
+		justina.cumpleAnios()
+		assert.notThat(justina.eligeRegalo(scalextric))
+	}
+
+	test "Justina con edad par elige a cualquier yo-yo porque tiene 4 dígitos." {
+		justina.cumpleAnios()
+		assert.that(justina.eligeRegalo(yo_yo))
+	}
+
+	test "Pedro tiene de mejor amiga a Justina, también le gusta el scalextric con un auto extra." {
+		scalextric.agregarAuto()
+		assert.that(pedro.eligeRegalo(scalextric))
+	}
+
+	test "Pedro tiene de mejor amigo a Stefan, entonces también le gusta el yo-yo verde." {
+		pedro.cambiarMejorAmigue(stefan)
+		yo_yo.elegirColor("verde")
+		assert.that(pedro.eligeRegalo(yo_yo))
+	}
+	
+	test "Nazarena elige un regalo si el número al azar es mayor que 4" {
+		nazarena.forzarNumeroRandom(5)
+		assert.that(nazarena.eligeRegalo(yo_yo))
+	}
+	
+	test "Nazarena no elige un regalo si el número al azar es menor o igual que 4" {
+		nazarena.forzarNumeroRandom(3)
+		assert.notThat(nazarena.eligeRegalo(yo_yo))
+	}
+	
+	test "Una persona conoce su nombre" {
+		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1990))
+		assert.notThat(persona.nombre().isEmpty())
+	}
+	
+	test "Una persona conoce su fecha de nacimiento" {
+		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1990))
+		assert.notThat(persona.fechaNacimiento().toString().isEmpty())
+	}
+	
+	test "Una persona nacida antes de los 90 elige un regalo que cueste más de $25.000" {
+		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1980))
+		const regalo = object {
+			method cuantoCuesta() = 30000
+		}
+		assert.that(persona.eligeRegalo(regalo))
+	}
+	
+	test "Una persona nacida antes de los 90 no elige un regalo que cueste menos de $25.000" {
+		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1980))
+		const regalo = object {
+			method cuantoCuesta() = 20000
+		}
+		assert.notThat(persona.eligeRegalo(regalo))
+	}
+	
+	test "Una persona nacida después de los 90 elige un regalo que cueste menos de $50.000" {
+		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1995))
+		const regalo = object {
+			method cuantoCuesta() = 30000
+		}
+		assert.that(persona.eligeRegalo(regalo))
+	}
+	
+	test "Una persona nacida después de los 90 no elige un regalo que cueste más de $50.000" {
+		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1995))
+		const regalo = object {
+			method cuantoCuesta() = 60000
+		}
+		assert.notThat(persona.eligeRegalo(regalo))
+	}
+
+}

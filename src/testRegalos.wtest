@@ -1,0 +1,93 @@
+import regalos.*
+
+describe "Tests de Regalos" {
+
+	test "Una pista de Scalextric sin autos extra cuesta $ 27.300" {
+		assert.equals(scalextric.cuantoCuesta(), 27300)
+	}
+
+	test "Una pista de Scalextric con 3 autos extra cuesta $ 43.050" {
+		scalextric.agregarAuto()
+		scalextric.agregarAuto()
+		scalextric.agregarAuto()
+		assert.equals(scalextric.cuantoCuesta(), 43050)
+	}
+
+	test "Una pista de Scalextric sin autos extra no es valiosa" {
+		assert.notThat(scalextric.esValioso())
+	}
+
+	test "Una pista de Scalextric con 1 auto extra es valiosa" {
+		scalextric.agregarAuto()
+		assert.that(scalextric.esValioso())
+	}
+
+	test "Un yo-yo de color amarillo cuesta $ 5.000" {
+		yo_yo.elegirColor("amarillo")
+		assert.equals(yo_yo.cuantoCuesta(), 5000)
+	}
+
+	test "Un yo-yo de color azul cuesta $ 6.500" {
+		assert.equals(yo_yo.cuantoCuesta(), 6500)
+	}
+
+	test "Un yo-yo de color rojo no es valioso" {
+		yo_yo.elegirColor("rojo")
+		assert.notThat(yo_yo.esValioso())
+	}
+
+	test "Un yo-yo de color azul es valioso" {
+		assert.that(yo_yo.esValioso())
+	}
+
+	test "Un balero sin adorno metálico cuesta $ 14.100" {
+		assert.equals(balero.cuantoCuesta(), 14100)
+	}
+
+	test "Un balero con adorno metálico cuesta $ 16.000" {
+		balero.agregarAdornoMetalico()
+		assert.equals(balero.cuantoCuesta(), 16000)
+	}
+
+	test "Un balero que no tiene adornos no es valioso" {
+		assert.notThat(balero.esValioso())
+	}
+
+	test "Un balero que tiene adornos es valioso" {
+		balero.agregarAdornoMetalico()
+		assert.that(balero.esValioso())
+	}
+	
+	test "La ropa Jordache es más cara que la que no tiene adicional" {
+		const jeanJordache = new Ropa(marca = "Jordache", fechaConfeccion = new Date(), valorBase = 10000)
+		const jeanZara = new Ropa(marca = "Zara", fechaConfeccion = new Date(), valorBase = 10000)
+		assert.that(jeanJordache.cuantoCuesta() > jeanZara.cuantoCuesta())
+	}
+	
+	test "La ropa Jordache es igual de cara que la Feraldy" {
+		const jeanJordache = new Ropa(marca = "Jordache", fechaConfeccion = new Date(), valorBase = 10000)
+		const jeanFeraldy = new Ropa(marca = "Feraldy", fechaConfeccion = new Date(), valorBase = 10000)
+		assert.equals(jeanJordache.cuantoCuesta(), jeanFeraldy.cuantoCuesta())
+	}
+	
+	test "Un jean en liquidación es más barato que uno que no lo está" {
+		const jeanJordache = new Ropa(marca = "Jordache", fechaConfeccion = new Date(), valorBase = 10000)
+		const jeanFeraldy = new Ropa(marca = "Feraldy", fechaConfeccion = new Date().minusMonths(4), valorBase = 10000)
+		assert.that(jeanJordache.cuantoCuesta() > jeanFeraldy.cuantoCuesta())
+	}
+	
+	test "Un voucher siempre es valioso" {
+		assert.that(voucher.esValioso())
+	}
+	
+	test "Un voucher es válido dentro de los 3 meses de emitido" {
+		const fechaFutura = new Date().plusMonths(2)
+		assert.that(voucher.esValido(fechaFutura))
+	}
+	
+	test "Un voucher vence a los 3 meses" {
+		const fechaFutura = new Date().plusMonths(4)
+		assert.notThat(voucher.esValido(fechaFutura))
+	}
+
+}
