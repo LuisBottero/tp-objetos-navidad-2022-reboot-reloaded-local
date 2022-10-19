@@ -9,7 +9,7 @@ object stefan {
 		valorMaximo = nuevoValor
 	}
 	
-	method eligeRegalo(regalo) = (!regalo.esValioso() && regalo.cuantoCuesta() < valorMaximo)
+	method eligeRegalo(regalo) = (!regalo.esValioso() && regalo.cuantoCuesta() < valorMaximo && regalo.esInteresante())
 }
 
 // Justina tiene 11 años. La edad es importante porque si es impar define
@@ -27,7 +27,7 @@ object justina {
 		
 	method quiereRegaloValioso() = edad.odd()
 
-	method eligeRegalo(regalo) = (if (self.quiereRegaloValioso()) { regalo.esValioso() } else { self.regaloTieneValorDeseado(regalo) })
+	method eligeRegalo(regalo) = regalo.esInteresante() && (if (self.quiereRegaloValioso()) { regalo.esValioso() } else { self.regaloTieneValorDeseado(regalo) })
 }
 
 // Tenemos a Pedro, que tiene amistades como a Justina y a Stefan. A la
@@ -51,7 +51,7 @@ object pedro {
 		amigues.remove(amigue)
 	}
 	
-	method eligeRegalo(regalo) = mejorAmigue.eligeRegalo(regalo)
+	method eligeRegalo(regalo) = mejorAmigue.eligeRegalo(regalo) && regalo.esInteresante()
 }
 
 // Queremos modelar a Nazarena que le puede gustar o no un regalo en base a un
@@ -68,7 +68,7 @@ object nazarena {
 		numeroRandomForzado = 0
 	}
 
-	method eligeRegalo(regalo) = ((if (numeroRandomForzado > 0) { numeroRandomForzado } else { new Range(start = 1, end = 7).anyOne() }) > 4)
+	method eligeRegalo(regalo) = regalo.esInteresante() && ((if (numeroRandomForzado > 0) { numeroRandomForzado } else { new Range(start = 1, end = 7).anyOne() }) > 4)
 }
 
 // Queremos modelar a una persona genérica, que tiene las siguientes características:
@@ -82,5 +82,5 @@ class Persona {
 	const valorMinimo = 25000
 	const valorMaximo = 50000
 	
-	method eligeRegalo(regalo) = (if (fechaNacimiento < fechaLimite) { regalo.cuantoCuesta() > valorMinimo } else { regalo.cuantoCuesta() < valorMaximo })
+	method eligeRegalo(regalo) = regalo.esInteresante() && (if (fechaNacimiento < fechaLimite) { regalo.cuantoCuesta() > valorMinimo } else { regalo.cuantoCuesta() < valorMaximo })
 }

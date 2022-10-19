@@ -90,4 +90,15 @@ describe "Tests de Regalos" {
 		assert.notThat(voucher.esValido(fechaFutura))
 	}
 
+	test "Un yoyo de marca rusell tiene cantidad de letras par" {
+		assert.that(yo_yo.marcaConCantidadLetrasPar())
+	}
+
+	test "Un yoyo de marca ruSsell o  tiene cantidad de letras par" {
+		yo_yo.marca("ruSsell")
+		assert.notThat(yo_yo.marcaConCantidadLetrasPar())
+		yo_yo.marca("rusell")
+	}
+
+
 }
