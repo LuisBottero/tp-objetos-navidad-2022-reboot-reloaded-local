@@ -82,5 +82,5 @@ class RegistroHistoricoRegalos {
 object criterio1 {
 
 	method seleccionarRegalo(_regalos,_persona) = return _regalos.first()
-	
+	//Rama Experimental
 }
