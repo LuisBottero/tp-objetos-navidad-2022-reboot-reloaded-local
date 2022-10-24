@@ -89,16 +89,92 @@ describe "Tests de Regalos" {
 		const fechaFutura = new Date().plusMonths(4)
 		assert.notThat(voucher.esValido(fechaFutura))
 	}
-
-	test "Un yoyo de marca rusell tiene cantidad de letras par" {
-		assert.that(yo_yo.marcaConCantidadLetrasPar())
+	
+	test "Todo regalo debe tener marca" {
+		assert.notThat(scalextric.marca().isEmpty())
+		assert.notThat(yo_yo.marca().isEmpty())
+		assert.notThat(balero.marca().isEmpty())
+		const jean = new Ropa(marca = "Una Marca", fechaConfeccion = new Date(), valorBase = 10000)
+		assert.notThat(jean.marca().isEmpty())
+		assert.notThat(voucher.marca().isEmpty())
 	}
-
-	test "Un yoyo de marca ruSsell o  tiene cantidad de letras par" {
-		yo_yo.marca("ruSsell")
-		assert.notThat(yo_yo.marcaConCantidadLetrasPar())
-		yo_yo.marca("rusell")
+	
+	test "Ningún regalo es interesante si su marca tiene una cantidad impar de letras" {
+		scalextric.marca("a")
+		assert.notThat(scalextric.esInteresante())
+		yo_yo.marca("abc")
+		assert.notThat(yo_yo.esInteresante())
+		balero.marca("abcde")
+		assert.notThat(balero.esInteresante())
+		const jean = new Ropa(marca = "abcdefg", fechaConfeccion = new Date(), valorBase = 10000)
+		assert.notThat(jean.esInteresante())
+		voucher.marca("abcdefghi")
+		assert.notThat(voucher.esInteresante())
 	}
-
+	
+	test "Un scalextric es interesante si su marca tiene una cantidad par de letras y es valioso" {
+		scalextric.marca("abcd")
+		scalextric.agregarAuto()
+		assert.that(scalextric.esValioso())
+		assert.that(scalextric.esInteresante())
+	}
+	
+	test "Un scalextric NO es interesante si no es valioso" {
+		scalextric.marca("abcd")
+		assert.notThat(scalextric.esValioso())
+		assert.notThat(scalextric.esInteresante())
+	}
+	
+	test "Un yoyo es interesante si su marca tiene una cantidad par de letras y no es rojo" {
+		yo_yo.marca("abcd")
+		yo_yo.elegirColor("azul")
+		assert.that(yo_yo.esInteresante())
+	}
+	
+	test "Un yoyo NO es interesante si es rojo" {
+		yo_yo.marca("abcd")
+		yo_yo.elegirColor("rojo")
+		assert.notThat(yo_yo.esInteresante())
+	}
+	
+	test "Un balero es interesante si su marca tiene una cantidad par de letras y su costo es mayor a 15000" {
+		balero.marca("abcd")
+		balero.agregarAdornoMetalico()
+		assert.that(balero.cuantoCuesta() > 15000)
+		assert.that(balero.esInteresante())
+	}
+	
+	test "Un balero NO es interesante si su costo es menor o igual a 15000" {
+		balero.marca("abcd")
+		assert.that(balero.cuantoCuesta() <= 15000)
+		assert.notThat(balero.esInteresante())
+	}
+	
+	test "Un voucher es interesante si su marca tiene una cantidad par de letras y no está vencido" {
+		voucher.marca("abcd")
+		assert.that(voucher.esValido(new Date()))
+		assert.that(voucher.esInteresante())
+	}
+	
+	test "Un voucher NO es interesante si está vencido" {
+		voucher.marca("abcd")
+		voucher.fechaVencimiento(new Date().minusMonths(1))
+		assert.notThat(voucher.esValido(new Date()))
+		assert.notThat(voucher.esInteresante())
+	}
+	
+	test "La ropa es interesante si su marca tiene una cantidad par de letras y el costo - el valor base es menor a 5000" {
+		const jeanValorBase = 10000
+		const jean = new Ropa(marca = "abcd", fechaConfeccion = new Date(), valorBase = jeanValorBase)
+		assert.that(jean.cuantoCuesta() - jeanValorBase < 5000)
+		assert.that(jean.esInteresante())
+	}
+	
+	test "La ropa NO es interesante si el costo - el valor base es mayor o igual a 5000" {
+		const jeanValorBase = 10000
+		const jean = new Ropa(marca = "Jordache", fechaConfeccion = new Date(), valorBase = jeanValorBase)
+		assert.that(jean.cuantoCuesta() - jeanValorBase >= 5000)
+		assert.notThat(jean.esInteresante())
+	}
 
 }

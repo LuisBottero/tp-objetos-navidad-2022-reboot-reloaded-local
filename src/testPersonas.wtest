@@ -72,6 +72,7 @@ describe "Tests de Personas" {
 		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1980))
 		const regalo = object {
 			method cuantoCuesta() = 30000
+			method esInteresante() = true
 		}
 		assert.that(persona.eligeRegalo(regalo))
 	}
@@ -80,6 +81,7 @@ describe "Tests de Personas" {
 		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1980))
 		const regalo = object {
 			method cuantoCuesta() = 20000
+			method esInteresante() = true
 		}
 		assert.notThat(persona.eligeRegalo(regalo))
 	}
@@ -88,6 +90,7 @@ describe "Tests de Personas" {
 		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1995))
 		const regalo = object {
 			method cuantoCuesta() = 30000
+			method esInteresante() = true
 		}
 		assert.that(persona.eligeRegalo(regalo))
 	}
@@ -96,8 +99,104 @@ describe "Tests de Personas" {
 		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1995))
 		const regalo = object {
 			method cuantoCuesta() = 60000
+			method esInteresante() = true
 		}
 		assert.notThat(persona.eligeRegalo(regalo))
 	}
-
+	
+	test "Stefan elige un regalo que no es valioso y es barato, si también es interesante." {
+		const regalo = object {
+			method cuantoCuesta() = 1000
+			method esValioso() = false
+			method esInteresante() = true
+		}
+		assert.that(stefan.eligeRegalo(regalo))
+	}
+	
+	test "Stefan no elige un regalo que no es valioso y es barato si no es interesante." {
+		const regalo = object {
+			method cuantoCuesta() = 1000
+			method esValioso() = false
+			method esInteresante() = false
+		}
+		assert.notThat(stefan.eligeRegalo(regalo))
+	}
+	
+	test "Justina, si tiene edad impar, elige un regalo que es valioso, si también es interesante" {
+		const regalo = object {
+			method cuantoCuesta() = 1000
+			method esValioso() = true
+			method esInteresante() = true
+		}
+		assert.that(justina.eligeRegalo(regalo))
+	}
+	
+	test "Justina, si tiene edad impar, no elige un regalo que es valioso si no es interesante" {
+		const regalo = object {
+			method cuantoCuesta() = 1000
+			method esValioso() = true
+			method esInteresante() = false
+		}
+		assert.notThat(justina.eligeRegalo(regalo))
+	}
+	
+	test "Pedro elige el mismo regalo que Justina, si también es interesante" {
+		const regalo = object {
+			method cuantoCuesta() = 1000
+			method esValioso() = true
+			method esInteresante() = true
+		}
+		assert.that(justina.eligeRegalo(regalo))
+		assert.that(pedro.eligeRegalo(regalo))
+	}
+	
+	test "Pedro no elige el mismo regalo que Justina si no es interesante" {
+		const regalo = object {
+			method cuantoCuesta() = 1000
+			method esValioso() = true
+			method esInteresante() = false
+		}
+		assert.notThat(justina.eligeRegalo(regalo))
+		assert.notThat(pedro.eligeRegalo(regalo))
+	}
+	
+	test "Nazarena, si un número al azar es mayor que 4, elige un regalo si también es interesante" {
+		const regalo = object {
+			method cuantoCuesta() = 1000
+			method esValioso() = true
+			method esInteresante() = true
+		}
+		nazarena.forzarNumeroRandom(5)
+		assert.that(nazarena.eligeRegalo(regalo))
+	}
+	
+	test "Nazarena, si un número al azar es mayor que 4, no elige un regalo si no es interesante" {
+		const regalo = object {
+			method cuantoCuesta() = 1000
+			method esValioso() = true
+			method esInteresante() = false
+		}
+		nazarena.forzarNumeroRandom(5)
+		assert.notThat(nazarena.eligeRegalo(regalo))
+	}
+	
+	test "Una persona genérica, si nació antes de 1990 y el regalo es mayor al valor mínimo, lo elige si también es interesante" {
+		const regalo = object {
+			method cuantoCuesta() = 30000
+			method esValioso() = true
+			method esInteresante() = true
+		}
+		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1985))
+		assert.that(persona.eligeRegalo(regalo))
+	}
+	
+	test "Una persona genérica, si nació antes de 1990 y el regalo es mayor al valor mínimo, no lo elige si no es interesante" {
+		const regalo = object {
+			method cuantoCuesta() = 30000
+			method esValioso() = true
+			method esInteresante() = false
+		}
+		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1985))
+		assert.notThat(persona.eligeRegalo(regalo))
+	}
 }

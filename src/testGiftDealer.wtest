@@ -29,10 +29,10 @@ describe "Tests de GiftDealers" {
 		const regalo2 = object { method cuantoCuesta() = 15000 }
 		const regalo3 = object { method cuantoCuesta() = 13000 }
 		const regalo4 = object { method cuantoCuesta() = 2000 }
-		giftDealer.asignarRegalo(pedro, regalo1, new Date())
-		giftDealer.asignarRegalo(stefan, regalo2, new Date())
-		giftDealer.asignarRegalo(pedro, regalo3, new Date())
-		giftDealer.asignarRegalo(stefan, regalo4, new Date())
+		giftDealer.forzarRegalo(pedro, regalo1)
+		giftDealer.forzarRegalo(stefan, regalo2)
+		giftDealer.forzarRegalo(pedro, regalo3)
+		giftDealer.forzarRegalo(stefan, regalo4)
 		assert.equals(giftDealer.quienRecibioMasPlataEnRegalos(), pedro)
 	}
 	
@@ -44,6 +44,66 @@ describe "Tests de GiftDealers" {
 	
 	test "Si alguien no elige ningún regalo, se le asigna un voucher" {
 		const persona = object { method eligeRegalo(regalo) = false }
-		assert.equals(giftDealer.obtenerRegaloAsignado(persona), voucher)
+		assert.equals(giftDealer.obtenerElRegaloMasBarato(persona), voucher)
+	}
+	
+	test "El criterio de selección de regalos por defecto es el más barato" {
+		assert.equals(giftDealer.verActualCriterioSeleccionRegalo(), "el más barato")
+	}
+	
+	test "Se debe poder cambiar el criterio de selección de regalos" {
+		const criterio1 = giftDealer.verActualCriterioSeleccionRegalo()
+		giftDealer.cambiarCriterioSeleccionRegalo("al azar")
+		const criterio2 = giftDealer.verActualCriterioSeleccionRegalo()
+		assert.notEquals(criterio1, criterio2)
+	}
+
+	test "Si quiero cambiar el criterio de selección de regalo a uno inválido, debe tirar un error" {
+		assert.throwsException({ giftDealer.cambiarCriterioSeleccionRegalo("test") })
+	}
+	
+	test "El criterio de selección \"el más barato\" asigna el regalo más barato de los elegidos" {
+		const persona = object { method eligeRegalo(regalo) = true }
+		const regalo1 = object { method cuantoCuesta() = 1 }
+		const regalo2 = object { method cuantoCuesta() = 2 }
+		const regalo3 = object { method cuantoCuesta() = 3 }
+		giftDealer.cambiarCriterioSeleccionRegalo("el más barato")
+		giftDealer.cambiarRegalosPosibles([regalo1, regalo2, regalo3])
+		assert.equals(giftDealer.asignarRegalo(persona), regalo1)
+		giftDealer.cambiarRegalosPosibles([regalo3, regalo1, regalo2])
+		assert.equals(giftDealer.asignarRegalo(persona), regalo1)
+		giftDealer.cambiarRegalosPosibles([regalo2, regalo3, regalo1])
+		assert.equals(giftDealer.asignarRegalo(persona), regalo1)
+	}
+	
+	test "El criterio de selección \"al azar\" asigna cualquier regalo de los posibles, lo elija o no" {
+		const persona = object { method eligeRegalo(regalo) = new Range(start = 1, end = 10).anyOne().odd() }
+		const regalo1 = object { method cuantoCuesta() = 1 }
+		const regalo2 = object { method cuantoCuesta() = 2 }
+		const regalo3 = object { method cuantoCuesta() = 3 }
+		const regalosPosibles = [regalo1, regalo2, regalo3]
+		giftDealer.cambiarCriterioSeleccionRegalo("al azar")
+		giftDealer.cambiarRegalosPosibles(regalosPosibles)
+		assert.that(regalosPosibles.contains(giftDealer.asignarRegalo(persona)))
+	}
+	
+	test "El criterio de selección \"el primero que no le gusta\" asigna el primer regalo que no es elegido por la persona" {
+		const persona = object { method eligeRegalo(regalo) = regalo.cuantoCuesta() < 2 }
+		const regalo1 = object { method cuantoCuesta() = 1 }
+		const regalo2 = object { method cuantoCuesta() = 2 }
+		const regalo3 = object { method cuantoCuesta() = 3 }
+		giftDealer.cambiarCriterioSeleccionRegalo("el primero que no le gusta")
+		giftDealer.cambiarRegalosPosibles([regalo1, regalo2, regalo3])
+		assert.equals(giftDealer.asignarRegalo(persona), regalo2)
+	}
+	
+	test "El criterio de selección \"el primero que no le gusta\" asigna un voucher si todos los regalos son elegidos" {
+		const persona = object { method eligeRegalo(regalo) = true }
+		const regalo1 = object { method cuantoCuesta() = 1 }
+		const regalo2 = object { method cuantoCuesta() = 2 }
+		const regalo3 = object { method cuantoCuesta() = 3 }
+		giftDealer.cambiarCriterioSeleccionRegalo("el primero que no le gusta")
+		giftDealer.cambiarRegalosPosibles([regalo1, regalo2, regalo3])
+		assert.equals(giftDealer.asignarRegalo(persona), voucher)
 	}
 }
