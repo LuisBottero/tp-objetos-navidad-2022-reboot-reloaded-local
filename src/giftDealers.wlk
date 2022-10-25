@@ -89,9 +89,3 @@ class RegistroHistoricoRegalos {
 	var property costo
 	var property fecha
 }
-
-object criterio1 {
-
-	method seleccionarRegalo(_regalos,_persona) = return _regalos.first()
-	
-}
