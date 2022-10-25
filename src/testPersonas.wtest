@@ -68,6 +68,7 @@ describe "Tests de Personas" {
 		assert.notThat(persona.fechaNacimiento().toString().isEmpty())
 	}
 	
+<<<<<<< HEAD
 	test "Una persona nacida antes de los 90 elige un regalo que cueste más de $25.000" {
 		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1980))
 		const regalo = object {
@@ -199,4 +200,38 @@ describe "Tests de Personas" {
 		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1985))
 		assert.notThat(persona.eligeRegalo(regalo))
 	}
+=======
+//	test "Una persona nacida antes de los 90 elige un regalo que cueste más de $25.000" {
+//		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1980))
+//		const regalo = object {
+//			method cuantoCuesta() = 30000
+//		}
+//		assert.that(persona.eligeRegalo(regalo))
+//	}
+//	
+//	test "Una persona nacida antes de los 90 no elige un regalo que cueste menos de $25.000" {
+//		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1980))
+//		const regalo = object {
+//			method cuantoCuesta() = 20000
+//		}
+//		assert.notThat(persona.eligeRegalo(regalo))
+//	}
+//	
+//	test "Una persona nacida después de los 90 elige un regalo que cueste menos de $50.000" {
+//		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1995))
+//		const regalo = object {
+//			method cuantoCuesta() = 30000
+//		}
+//		assert.that(persona.eligeRegalo(regalo))
+//	}
+//	
+//	test "Una persona nacida después de los 90 no elige un regalo que cueste más de $50.000" {
+//		const persona = new Persona(nombre = "Jurgen", fechaNacimiento = new Date(day = 01, month = 01, year = 1995))
+//		const regalo = object {
+//			method cuantoCuesta() = 60000
+//		}
+//		assert.notThat(persona.eligeRegalo(regalo))
+//	}
+
+>>>>>>> 1379506b483bed2bc0ec0387f5169f7a0c3144ae
 }
