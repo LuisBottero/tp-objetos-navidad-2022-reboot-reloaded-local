@@ -1,0 +1,68 @@
+import Persona.*
+import Vacuna.*
+
+describe "Persona" {
+
+	test "Personas mayores a 40 años" {
+		const persona1 = object { method edad() = 40 }
+		assert.equals(persona1.edad(),40)
+
+	}
+	test "Personas menores a 40 años" {
+		const persona2 = object { method edad() = 39 }
+		assert.equals(persona2.edad(),39)
+	}
+	
+	test "Control de anticuerpos luego de la aplicacion de la vacuna Paifer" {
+		const personaPaifer1 = new Persona(edad = 15, nombre = "Luis", ciudadDondeVive = "Buenos Aires")
+		personaPaifer1.recibirDosis(paifer)
+		assert.equals(personaPaifer1.anticuerpos(),10)
+	}	
+
+	test "La inmunidad para una persona de mas de 40 años que se aplica Paifer es 6 meses desde que se la aplica" {
+		const personaPaifer2 = new Persona(edad = 41, nombre = "Martin", ciudadDondeVive = "Buenos Aires")
+		const fechaSeisMeses = new Date()
+		personaPaifer2.recibirDosis(paifer)
+		assert.equals(personaPaifer2.fechaInmunidad(),fechaSeisMeses.plusMonths(6))
+	}	
+
+	test "La inmunidad para una persona de menos de 40 años que se aplica Paifer es 9 meses desde que se la aplica" {
+		const personaPaifer3 = new Persona(edad = 40, nombre = "Jose", ciudadDondeVive = "Buenos Aires")
+		const fechaSeisMeses = new Date()
+		personaPaifer3.recibirDosis(paifer)
+		assert.equals(personaPaifer3.fechaInmunidad(),fechaSeisMeses.plusMonths(9))
+	}	
+
+	test "Control de anticuerpos luego de la aplicacion de la vacuna Larussa" {
+		const personaLarussa = new Persona(edad = 20, nombre = "Rusito", ciudadDondeVive = "Buenos Aires")
+		personaLarussa.anticuerpos(10)
+		larussa.compuestos().add(2)
+		larussa.compuestos().add(5)
+		personaLarussa.recibirDosis(larussa)
+		assert.equals(personaLarussa.anticuerpos(),70)
+	}	
+
+	test "Control de anticuerpos mas de 20x luego de la aplicacion de la vacuna Larussa" {
+		const personaLarussa1 = new Persona(edad = 20, nombre = "Rusito", ciudadDondeVive = "Buenos Aires")
+		personaLarussa1.anticuerpos(1)
+		larussa.compuestos().add(20)
+		larussa.compuestos().add(50)
+		personaLarussa1.recibirDosis(larussa)
+		assert.equals(personaLarussa1.anticuerpos(),20)
+	}	
+
+	test "La inmunidad para una persona se aplica Larussa es hasta el 03/03/2022" {
+		const personaLarussa2 = new Persona(edad = 41, nombre = "Pedro", ciudadDondeVive = "Buenos Aires")
+		personaLarussa2.recibirDosis(larussa)
+		assert.equals(personaLarussa2.fechaInmunidad(),new Date(day = 03, month = 03, year = 2022))
+	}
+
+	test "Control de anticuerpos luego de la aplicacion de la vacuna AstraLaVistaZeneca " {
+	const personaPaifer1 = new Persona(edad = 15, nombre = "Luis", ciudadDondeVive = "Buenos Aires")
+	personaPaifer1.recibirDosis(astraLaVistaZeneca)
+	assert.equals(personaPaifer1.anticuerpos(),10)
+	}	
+	
+
+
+}
